@@ -15,7 +15,7 @@ const toggleDrawerClick = () => {
                 >
                     <input 
                         type='button' 
-                        onClick={() => {toggleDrawerClick}}
+                        onClick={() => toggleDrawerClick}
                     />
 
                 </Drawer>

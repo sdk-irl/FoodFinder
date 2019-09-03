@@ -1,5 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Refactored Project
+This project is the former Neighborhood Maps project. I am currently refactoring it with React Hooks and other newer or better practices.
+
 ## Available Scripts
 
 In the project directory, you can run:
