@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// bootstrapped this app with google-maps-react and now importing necessary items from this API
 import { Map, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
 //import { statement } from '@babel/template';
 //import OfflineMapContainer from "./OfflineMapContainer";
@@ -13,15 +14,23 @@ const MAP_CENTER = {
     lng: -88.240827
 };
 
-
 function MapContainer(props) {
 
     const [ map, setMap ] = useState(null);;
-    const [ markers, setMarkers ] = useState([]);
-    const [ selectedMarker, setSelectedMarkers ] = useState (null);
-    const [ showingInfoWindow, showHideInfoWindow ] = useState(false);
+    const [ selectedMarker, setSelectedMarker ] = useState(null);
 
-    //markerProps and selectedMarkerProps
+  //callback function for when you close the info window
+  //props.locations
+
+    let markers = props.locations.map((location, index) => {
+        let marker = new props.google.maps.Marker({
+            index,
+            position:location.pos,
+            restaurantName: location.name,
+            animation: props.google.maps.animation.DROP,
+            bestKnownFor: location.bestKnownFor
+        });
+    });
 
     useEffect(() =>{
 
@@ -47,7 +56,7 @@ function MapContainer(props) {
             onClick={showHideInfoWindow}
         >
             <InfoWindow
-                showingInfoWindow={showingInfoWindow}
+                showingInfoWindow={ selectedMarker!==null }
             >
                 <>
                     <h1>Placeholder for place name</h1>

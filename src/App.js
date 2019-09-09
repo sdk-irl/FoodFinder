@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './App.css';
-import allRestaurants from "./data/locations.json";
 import MapContainer from './MapContainer';
 import LocationsDrawer from './LocationsDrawer';
 
 function App() {
 
-  const [ showingRestaurants, setShowingRestaurants ] = useState(allRestaurants);
+  const [ allRestaurants, setAllRestaurants ] = useState(null);
+  const [ filteredRestaurants, setfilteredRestaurants ] = useState(null);
 
-
+  //if filteredRestaurants === null (fetch and set)
 
 
   return (
@@ -17,10 +17,10 @@ function App() {
         Champaign FoodFinder
       </h1>
       <MapContainer 
-        locations={showingRestaurants}
+        locations={filteredRestaurants===null?allRestaurants:filteredRestaurants}
       />
       <LocationsDrawer 
-        locations={showingRestaurants}
+        locations={allRestaurants}
       />
 
     </div>

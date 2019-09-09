@@ -4,9 +4,10 @@ import Drawer from '@material-ui/core/Drawer';
 export default function LocationsDrawer() {
     const [ drawerOpen, setDrawerOpen ] = useState(true);
 
-const toggleDrawerClick = () => {
-    setDrawerOpen(false);
-}
+    function toggleDrawerClick() {
+        setDrawerOpen( x => !x );
+    }
+
     return (
         <>
             {drawerOpen && (
@@ -15,7 +16,7 @@ const toggleDrawerClick = () => {
                 >
                     <input 
                         type='button' 
-                        onClick={() => toggleDrawerClick}
+                        onClick={toggleDrawerClick}
                     />
 
                 </Drawer>
