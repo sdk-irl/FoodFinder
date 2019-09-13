@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 // bootstrapped this app with google-maps-react and now importing necessary items from this API
-import { Map, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
+import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import Popup from './Popup';
 //import { statement } from '@babel/template';
 //import OfflineMapContainer from "./OfflineMapContainer";
+import API_KEY from './googleApiKey';
 
-const API_KEY = "AIzaSyAVIlVT1r_WJh4Ru7aIAU8NAd7GPxPtQC8";
 //const FourSquare_CLIENT_ID = "C32IZHQ03NWJ15NO234FQVKVI1EH3BQMURKIWGMW0NM1NG3M";
 //const FourSquare_SECRET = "1VASBI51LWX20U22VLZBADELCAQBW2QGGE4RU1SNOSBKHPEQ";
 // Set FourSquare version to date of writing. Update every couple of months to ensure latest version
@@ -22,16 +23,6 @@ function MapContainer(props) {
   //callback function for when you close the info window
   //props.locations
 
-    let markers = props.locations.map((location, index) => {
-        let marker = new props.google.maps.Marker({
-            index,
-            position:location.pos,
-            restaurantName: location.name,
-            animation: props.google.maps.animation.DROP,
-            bestKnownFor: location.bestKnownFor
-        });
-    });
-
     useEffect(() =>{
 
     });
@@ -43,6 +34,7 @@ function MapContainer(props) {
     }
 
     //showHideInfoWindow = () => {    } This needs to toggle the infowindow and markers
+    const showHideInfoWindow = Function.prototype;
 
     return (
         <Map
@@ -55,13 +47,19 @@ function MapContainer(props) {
             onReady={onMapReady}
             onClick={showHideInfoWindow}
         >
-            <InfoWindow
+            {props.locations.map((location, index) => 
+                <Marker
+                    key={index}
+                    title={location.name}
+                    id={index}
+                    position={location.pos}
+                    animation={props.google.maps.Animation.DROP}
+                    bestKnownFor={location.bestKnownFor}
+                ></Marker>
+            )}
+            <Popup
                 showingInfoWindow={ selectedMarker!==null }
-            >
-                <>
-                    <h1>Placeholder for place name</h1>
-                </>
-            </InfoWindow>
+            ></Popup>
         </Map>
     );
 }

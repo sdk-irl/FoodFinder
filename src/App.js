@@ -8,7 +8,17 @@ function App() {
   const [ allRestaurants, setAllRestaurants ] = useState(null);
   const [ filteredRestaurants, setfilteredRestaurants ] = useState(null);
 
-  //if filteredRestaurants === null (fetch and set)
+  if (allRestaurants === null) {
+    fetch('./locations.json')
+      .then(response => {
+        if(!response.ok) {
+          throw new Error('Restaurants response not okay');
+        }
+        return response;
+      })
+      .then(response => response.json())
+      .then(response => setAllRestaurants(response))
+  };
 
 
   return (
