@@ -2,13 +2,10 @@ import React from 'react';
 import { InfoWindow } from 'google-maps-react';
 
 function Popup(props) {
-    if (!props.showingInfoWindow) {
-        return null;
-    };
     
     return(
         <InfoWindow
-            
+            visible={props.showingInfoWindow}
             >
             <>
                 <h1>Placeholder for place name</h1>
