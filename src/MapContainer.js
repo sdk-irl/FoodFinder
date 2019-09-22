@@ -19,30 +19,53 @@ function MapContainer(props) {
     function onMapReady(_, m) {
         setMap(m);
         // resetMarkers(props.locations);
-    };
+    }
     function onMarkerClick(marker) {
-        console.info(marker);
         // Defines the FourSquare URL including the client ID, Secret, Verion number, two lat/long search parameters, and a limit on number of returns
-        const FourSquareUrl_Search = `https://api.foursquare.com/v2/venues/search?client_id=${FourSquare_CLIENT_ID}&client_secret=${FourSquare_SECRET}&v=${FourSquare_VERSION}&radius=250&ll=${marker.position.lat},${marker.position.lng}&limit=10`;
-        console.log(FourSquareUrl_Search);
-        // Variable declaring a new request that uses the FourSquare URL as a parameter
-        const request = new Request(FourSquareUrl_Search, {
-            method: "GET"
-        });
-
-        fetch(request) 
-        .then(response => {
-            if(!response.ok) {
-                throw new Error('Response not okay');
-            }
-            console.log('Response', response.json());
-        })
-         .catch(error => console.error('Error:', error));
+        const fourSquareMatches = getFourSquareData(marker);
         // close previous info windows before opening the next
         // const selectedMarker = setSelectedMarker(selectedMarker === marker);
         // return selectedMarker;
-    };
-
+    }
+    function findBusinessMatch(marker, fsVenues) {
+        let businessMatch = fsVenues.response.venues.filter(
+            venue => 
+                venue.name.includes(marker.title) ||
+                marker.title.includes(venue.name)
+        )
+        if (!businessMatch.length === 1) throw new Error('Business match failed');
+        return businessMatch[0];
+    }
+    function getFourSquareData(marker) {
+        const FourSquareUrl_Search = `https://api.foursquare.com/v2/venues/search?client_id=${FourSquare_CLIENT_ID}&client_secret=${FourSquare_SECRET}&v=${FourSquare_VERSION}&radius=250&ll=${marker.position.lat},${marker.position.lng}&limit=10`;
+        // Variable declaring a new request that uses the FourSquare URL as a parameter
+        const r = new Request(FourSquareUrl_Search, {
+            method: "GET"
+        });
+        fetch(r) 
+        .then(r => {
+            if(!r.ok) {
+                throw new Error('Response not okay');
+            }
+            return r.json();
+        })
+        .then(r => {
+            const restaurant = findBusinessMatch(marker,r);
+            const venueId = restaurant.id;
+            const url = `https://api.foursquare.com/v2/venues/${venueId}/hours?client_id=${FourSquare_CLIENT_ID}&client_secret=${FourSquare_SECRET}&v=${FourSquare_VERSION}`;
+            const req = new Request(url, {
+                method: 'GET'
+            });
+            return fetch(req);
+        })
+        .then(r => {
+            if (!r.ok) {
+                throw new Error('Venue response not okay');
+            }
+            return r.json();
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
 
 //callback function for when you close the info window
